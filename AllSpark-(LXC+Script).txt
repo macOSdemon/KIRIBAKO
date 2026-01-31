@@ -2,55 +2,36 @@
 sudo apt update
 sudo apt install lxc lxc-templates bridge-utils
 
-
-
-# 📦 Instalación en Debian
-sudo apt update
-sudo apt install lxc lxc-templates bridge-utils
-
-# 🧱 Crear un contenedor Debian
-sudo lxc-create -n vm-samba -t debian
-
-# 🔌 Iniciar el contenedor (segundo plano) : esto es para que aunque salga con "exit" seguirá encendido
-sudo lxc-start -n vm-samba -d
-
-# 🏗️ Comprobar que está en ejecución
-sudo lxc-info -n vm-samba
-# 🫸 Detener el contenedor
-sudo lxc-stop -n vm-samba
-# 📄 Listar 
-lxc-ls --fancy
-
-# 📲 Acceder al contenedor
-sudo lxc-attach -n vm-samba
-
-
-
-
 # agrego el script, con el nombre sin extension para añadirlo como comando
 cd /usr/bin/
 vim kiribako
 ----------------------------------------------------------------------------
 #!/bin/bash
 
-# Función para mostrar el menú
-mostrar_menu() {
-    # Mostrar estado actual de los contenedores
-    echo "Estado actual de los contenedores:"
-    lxc-ls --fancy
-    echo ""
-
+# 📌 Variables de color
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-echo -e "${RED} ____  __..__         .__ ___.             __      "
-echo -e "|    |/ _||__|_______ |__|\\_ |__  _____   |  | __  ____"
-echo -e "|      /  |  |\\_  __ \\|  | | __ \\ \\__  \\  |  |/ / /  _ \\ "
-echo -e "|    |  \\ |  | |  | \\/|  | | \\_\\ \\ / __ \\_|    < (  <_> )"
-echo -e "|____|__ \\|__| |__|   |__| |___  /(____  /|__|_ \\ \\____/ "
-echo -e "        \\/                     \\/      \\/      \\/        ${NC}"
+# Carpeta de logs
+LOGDIR="/tmp/lxc-logs"
+mkdir -p "$LOGDIR"
 
-    # Mostrar menú de opciones
+# Función para mostrar el menú
+mostrar_menu() {
+    echo ""
+    echo "Estado actual de los contenedores:"
+    lxc-ls --fancy || echo "No hay contenedores activos."
+    echo ""
+
+    echo -e "${RED} ____  __..__         .__ ___.             __      "
+    echo -e "|    |/ _||__|_______ |__|\\_ |__  _____   |  | __  ____"
+    echo -e "|      /  |  |\\_  __ \\|  | | __ \\ \\__  \\  |  |/ / /  _ \\ "
+    echo -e "|    |  \\ |  | |  | \\/|  | | \\_\\ \\ / __ \\_|    < (  <_> )"
+    echo -e "|____|__ \\|__| |__|   |__| |___  /(____  /|__|_ \\ \\____/ "
+    echo -e "        \\/                     \\/      \\/      \\/        ${NC}"
+    echo ""
+
     echo "¿Qué deseas hacer?"
     echo "1) Crear una nueva máquina"
     echo "2) Iniciar una máquina en segundo plano"
@@ -62,7 +43,6 @@ echo -e "        \\/                     \\/      \\/      \\/        ${NC}"
 
     case $opcion in
         1)
-            # Selección del tipo de sistema operativo
             echo "¿Qué sistema operativo deseas para la máquina?"
             echo "1) Debian"
             echo "2) Ubuntu"
@@ -72,26 +52,41 @@ echo -e "        \\/                     \\/      \\/      \\/        ${NC}"
             case $so in
                 1)
                     tipo_so="debian"
+                    release="bookworm"
                     ;;
                 2)
                     tipo_so="ubuntu"
+                    release="jammy"
                     ;;
                 3)
                     tipo_so="kali"
+                    release="kali-rolling"
                     ;;
                 *)
                     echo "Opción no válida. Se usará Debian por defecto."
                     tipo_so="debian"
+                    release="bookworm"
                     ;;
             esac
 
-            # Nombre de la nueva máquina
             read -p "Introduce el nombre de la nueva máquina: " nombre
-            sudo lxc-create -n "$nombre" -t "$tipo_so"
+            echo "Creando contenedor $nombre ($tipo_so $release)..."
+            sudo lxc-create -n "$nombre" -t download -- --dist "$tipo_so" --release "$release" --arch amd64
             ;;
         2)
             read -p "Introduce el nombre de la máquina a iniciar: " nombre
-            sudo lxc-start -n "$nombre" -d
+            LOGFILE="$LOGDIR/${nombre}_start.log"
+
+            echo "Iniciando contenedor $nombre en segundo plano..."
+            # Arranca en segundo plano, si falla genera log
+            sudo lxc-start -n "$nombre" -d --logfile "$LOGFILE" --logpriority DEBUG
+            sleep 1
+            STATE=$(sudo lxc-info -n "$nombre" -s | awk '{print $2}')
+            if [ "$STATE" != "RUNNING" ]; then
+                echo -e "${RED}El contenedor no pudo iniciar. Revisa el log: $LOGFILE${NC}"
+            else
+                echo -e "${GREEN}Contenedor $nombre iniciado correctamente.${NC}"
+            fi
             ;;
         3)
             read -p "Introduce el nombre de la máquina a la que quieres acceder: " nombre
@@ -115,7 +110,7 @@ echo -e "        \\/                     \\/      \\/      \\/        ${NC}"
     esac
 }
 
-# Bucle que muestra el menú hasta que el usuario decida salir
+# Bucle principal
 while true; do
     mostrar_menu
 done
@@ -126,10 +121,6 @@ chmod +x kiribako
 
 # compruebo que puedo acceder al comando de manera global
 command -v kiribako
-
-
-
-
 
 
 vim /etc/network/interfaces
@@ -147,17 +138,21 @@ iface lo inet loopback
 auto eno1
 iface eno1 inet manual
 
- # Bridge que usará la IP del host
- auto br0
- iface br0 inet static
-     address 192.168.1.57
-     netmask 255.255.255.0
-     gateway 192.168.1.1
-     bridge_ports eno1
-     bridge_stp off
-        bridge_fd 0
-        bridge_maxwait 0
-dns-nameservers 8.8.8.8 1.1.1.1
+# Interfaz física
+auto eno1
+iface eno1 inet manual
+
+# Bridge para LXC
+auto br0
+iface br0 inet static
+    address 192.168.1.32
+    netmask 255.255.255.0
+    gateway 192.168.1.1
+    bridge_ports eno1
+    bridge_stp off
+    bridge_fd 0
+    bridge_maxwait 0
+    dns-nameservers 8.8.8.8 1.1.1.1
 
 # The primary network interface
 #allow-hotplug wlp3s0
