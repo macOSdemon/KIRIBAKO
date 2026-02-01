@@ -245,7 +245,10 @@ systemctl restart iptables
 # Reiniciar sistema
 exec bash
 
-# defino una única ip estática para la máquina (dentro de la máquina nueva)
+## En el caso de que no se quira definir una ip estática, hay que realizar la configuración hasta aquí
+## En el caso qeu se requiera un ip estática, hay que realizar la siguiente configuración, ya que por defecto se configura por DHCP
+
+# defino una única ip estática para la máquina (dentro del nuevo contenedor)
 vim /etc/systemd/network/eth0.network
 ----------------------------------------------------------------
 [Match]
