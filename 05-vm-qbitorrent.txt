@@ -70,6 +70,26 @@ Tools > Options > Default save path: /Descargas
 ==========================================================================================
 # configuración de búsqueda automática
 
+# configuro buscador
+search > search plugin > check for updates
+search > search plugin > install new plugin > 
+# You can get new search engine plugins here: http://plugins.qbittorrent.org
+  # buscar un buscador adaptado a mis versiones de phyton y qbitorrent  
+  > http://plugins.qbittorrent.org
+# comprobar versiones de qbitorrent y phyton
+qbittorrent-nox --version
+python3 --version
+# en mi caso cpasbien.py
+  > http://plugins.qbittorrent.org
+  # busco cpasbian.py y le doy a descargar > copio el código y lo pego en la siguiente ruta del servidor
+  > /home/qbittorrent/.local/share/qBittorrent/nova3/engines/
+
+  > search > search plugin > install new plugin > /home/qbittorrent/.local/share/qBittorrent/nova3/engines/cpasbien.py
+
+
+
+
+
 
 
 ==========================================================================================
