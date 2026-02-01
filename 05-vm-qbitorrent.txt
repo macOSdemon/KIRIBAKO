@@ -103,9 +103,11 @@ https://github.com/qbittorrent/search-plugins/wiki/Unofficial-search-plugins
 | DivxTotal                 | 5.0.x      | 3.9.x  | Actualizado 2024, muchos torrents de películas modernas en español                             |
 | Dontorrent (BurningMop)   | 5.0.x      | 3.9.x  | Español, actualizado, confiable                                                                |
 | TomaDivx                  | 5.0.x      | 3.9.x  | Español, películas modernas y repacks Películas modernas en inglés, gran calidad, muy conocido |
+| Elitetorrent              | 4.6.7      | 3.9.5  | Español, enfocado en películas modernas                                                        |
+| naranjatorrent            | 5.0.x      | 3.9.x  | Español, actualizado 2024                                                                      |
+| Cpasbien                  | 4.5.x      | 3.11.x | Español, estrenos y series recientes                                                           |
 | YTS                       | 4.6.2      | 3.12   | Películas modernas en buena calidad y sin archivos gigantes, pero no es el sitio para español  |
-| Torrenflix                | 5.0.x      | 3.9.x  | Especializado en películas y series modernas                                                   |
-| FitGirl Repacks           | 5.1.0      | 3.13.3 | Repack de juegos y a veces películas o contenidos especiales                                   |
+| Torrenflix                | 5.0.x      | 3.9.x  | Especializado en películas y series modernas, pero no es el sitio para español                 |
 +---------------------------+------------+--------+------------------------------------------------------------------------------------------------+
 
 # configuro buscador
