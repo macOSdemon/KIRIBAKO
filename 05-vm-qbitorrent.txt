@@ -86,6 +86,15 @@ python3 --version
 
   > search > search plugin > install new plugin > /home/qbittorrent/.local/share/qBittorrent/nova3/engines/cpasbien.py
 
+# en el caso que falten librerias de phyton
+apt install python3-requests python3-bs4 -y
+# comprobar
+sudo -u qbittorrent python3 -c "import requests, bs4; print('ok')"
+
+# reinicio servicios 
+systemctl restart qbittorrent-nox
+systemctl status qbittorrent-nox
+
 
 
 
