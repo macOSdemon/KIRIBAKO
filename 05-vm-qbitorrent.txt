@@ -4,6 +4,12 @@ sudo apt update && sudo apt upgrade -y
 # instalar dependencias necesarias
 sudo apt install qbittorrent-nox
 
+# agrego en iptables esta línea 
+vim /etc/iptables/rules.v4
+----------------------------------------------------------------
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+----------------------------------------------------------------
+
 # lo ejecuto
 qbittorrent-nox
 
@@ -12,7 +18,7 @@ http://<ip-del-servidor>:8080
 -  Usuario: admin
 -  Contraseña: adminadmin
 
-# creo un usuario
+# creo un usuario para el sistema sin permisos
 sudo adduser --disabled-password --gecos "" qbittorrent
 
 # creo la carpeta de Descargas
@@ -59,6 +65,11 @@ http://<ip-del-servidor>:8080
 
 # asocio la carpeta de descargas
 Tools > Options > Default save path: /Descargas
+
+
+==========================================================================================
+# configuración de búsqueda automática
+
 
 
 ==========================================================================================
