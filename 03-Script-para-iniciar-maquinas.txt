@@ -169,7 +169,6 @@ echo -e "\e[1;35mEspacio total en /: \e[0m$DISK_TOTAL"
 echo -e "\e[1;35mTiempo desde el último arranque: \e[0m$UPTIME_FMT"
 
 uname -srm
-...
 -------------------------------------------------------------------------------------------
 
 # recargo el archivo bash.bashrc
@@ -245,6 +244,22 @@ systemctl restart iptables
 
 # Reiniciar sistema
 exec bash
+
+# defino una ip estática para la máquina desde el servidor principal
+vim /var/lib/lxc/vm-qbitorrent/config
+----------------------------------------------------------------
+...
+# IP estática
+lxc.net.0.ipv4.address = 192.168.1.101/24
+lxc.net.0.ipv4.gateway = 192.168.1.1
+----------------------------------------------------------------
+
+# paro e inicializo la máquina de nuevo y ya tendra lanueva ip
+kiribako
+4
+vm-qbitorrent
+2
+vm-qbitorrent
 
 
 
