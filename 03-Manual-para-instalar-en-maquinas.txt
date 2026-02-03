@@ -23,8 +23,8 @@ alias dfi='df -hTi'
 PS1='\[\e[0;90m\]\u 💥 |ಥ﹏ಥ |\[\e[1;35m\][optim5s.\H]\[\e[0m\] \[\e[1;37;41m\] \w \[\e[0m\]$: '
 
 # Opción técnica/grisácea
-export LS_COLORS="di=1;30:fi=0;37:ln=1;33:so=1;35:pi=1;33:bd=1;30:cd=1;30:or=1;31:mi=1;31:ex=1;31"
-#     di — directorios en gris oscuro técnico (bold black)
+export LS_COLORS="di=1;35:fi=0;37:ln=1;33:so=1;35:pi=1;33:bd=1;35:cd=1;35:or=1;31:mi=1;31:ex=1;31"
+#     di — directorios en rosa terminal técnico
 #     fi — archivos normales en gris medio
 #     ln — enlaces simbólicos en amarillo (bold yellow)
 #     so — sockets en púrpura oscuro (bold magenta)
