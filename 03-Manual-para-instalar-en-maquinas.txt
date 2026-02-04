@@ -246,7 +246,7 @@ systemctl restart iptables
 exec bash
 
 
-# ⚠️ Por defecto los contenedores no se inicializar automáticamente, hay que realizar la siguiente configuración parra que se inicialice en al iniciar el servidor
+# ⚠️ Por defecto los contenedores no se inicializar automáticamente, hay que realizar la siguiente configuración parra que se inicialice en al iniciar el servidor raíz
 # ⚠️ En caso de que se requiera que el contenedor se inicialice automáticamente
 vim /etc/lxc/<nombre_del_contenedor>.conf
 ----------------------------------------------------------------
